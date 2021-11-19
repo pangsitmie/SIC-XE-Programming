@@ -1,20 +1,19 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 string program_name, starting_address;
-vector<pair<string,pair<string,pair<string,string>>>> arr;
-map<string,string> labels;
+vector < pair<string,pair<string,pair<string,string>>>> arr;
 vector<string> object_code;
-fstream ifile, ofile;
-
+map<string,string> labels;
+fstream ifile,ofile;
 
 
 int hexToDec(string str)
 {
     int y;
     stringstream stream;
-    stream<<str;
-    stream>>hex>>y;
+    stream<< str;
+    stream>> hex >> y;
     return y;
 }
 
@@ -25,10 +24,31 @@ string decToHex(int num)
     return stream.str();
 }
 
+string add(string str, string adder, int flag)
+{
+    if(flag)//hex and hex
+    {
+        int num1 = hexToDec(str);
+        int num2 = hexToDec(adder);
+        int sum = num1+num2;
+
+        return decToHex(sum);
+    }
+    else//hex and dec
+    {
+        int num1 = hexToDec(str);
+        int num2 = atoi(adder.c_str());
+        int sum = num1+num2;
+
+        return decToHex(sum);
+
+    }
+}
+
 void input()
 {
     string str, temp;
-    int index =0;
+    int index=0;
     ifile.open("Input.txt",ios::in);
 
     while(!ifile.eof())
@@ -46,7 +66,7 @@ void input()
 
         for(int i=0;i<str.size();i++)
         {
-            while(i<str.size() && str[i] != ' '&& str[i] != '\t'&& str[i] != '\n')
+            while(i<str.size() && str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
             {
                 temp.push_back(str[i++]);
                 flag=1;
@@ -54,52 +74,28 @@ void input()
 
             if(flag)
             {
-                if(get_opcode(temp) == "-1" && (temp != "BYTE" && temp != "WORD" && temp != "RESB" && temp != "RESW" &&
-                temp != "START" &&temp != "END"))
+                if(get_opcode(temp) == "-1" && (temp != "RESB" && temp != "RESW" && temp != "BYTE" && temp != "WORD" && 
+                temp != "START" && temp != "END"))
                 {
                     if(!found_opcode)
-                    {
                         arr[index].second.first = temp;
-                    }
                     else
-                        arr[index].second.second.second = temp;
+                         arr[index].second.second.second = temp;
                 }
                 else
                 {
                     arr[index].second.second.first = temp;
                     found_opcode=1;
                 }
-                temp.clear();
-                flag=0;
             }
+            temp.clear();
+            flag=0;
         }
-        program_name = arr[index].second.first;
-        starting_address = arr[index].second.second.second;
+        program_name= arr[0].second.first;
+        starting_address = arr[0].second.second.second;
         index++;
     }
     ifile.close();
-}
-
-
-string add(string str, string adder, int flag)
-{
-	//Adding hex and hex
-	if(flag)
-	{
-		int num1 = hexToDec(str);
-		int num2 = hexToDec(adder);
-		int sum = num1 + num2;
-		return decToHex(sum);
-	}
-	//Adding decimal and hex
-	else
-	{
-		int num1 = hexToDec(str);
-		int num2 = atoi(adder.c_str());
-		int sum = num1 + num2;
-
-		return decToHex(sum);
-	}
 }
 
 void addressing()
@@ -107,7 +103,7 @@ void addressing()
     arr[0].first = starting_address;
     arr[1].first = starting_address;
 
-    if(arr[0].second.first.size() > 0)//IF FOUND LABEL 
+    if(arr[0].second.first.size() > 0)//IF FOUND LABEL FOR THE FIRST TIME
         labels[arr[0].second.first] = arr[0].first;//MARK THAT LABEL WITH THE STARTING ADDRESS
     
     for(int i=2;i<arr.size();i++)
@@ -116,14 +112,14 @@ void addressing()
         string lastAddress = arr[i-1].first;
         if(mnemonic !="BYTE" && mnemonic !="RESB" && mnemonic !="RESW")
         {
-            arr[i].first = add(lastAddress,"3",0);//add address by 3
+            arr[i].first = add(lastAddress,"3",0);//add address by 3, dec and hex
         }
         else
         {
             if(mnemonic == "BYTE")//IF MNEMONIC ==  BYTE
             {
                 int bytes;
-                string label2 = arr[i-1].second.second.second;
+                string label2 = arr[i-1].second.second.second;//how much do you want to reserve
                 char ch = label2[0];
                 if(ch == 'C')
                 {
@@ -131,11 +127,11 @@ void addressing()
                 }
                 else
                 {
-                    if((label2.size() - 3) % 2 == 0)
+                    if((label2.size() - 3) % 2 == 0)//even
 					{
 						bytes = (label2.size() -3) / 2;
 					}
-					else
+					else//odd
 					{
 						bytes = ((label2.size() - 3) / 2) + 1;
 					}
@@ -156,10 +152,10 @@ void addressing()
             }
         }
         if(arr[i].second.first.size()>0)//IF FOUND INSTRUCTIONS
-            labels[arr[i].second.second.first] = arr[i].first;//MARK THE LABEL WITH THAT CURRENT ADDRESS
+            labels[arr[i].second.first] = arr[i].first;//MARK THE LABEL WITH THAT CURRENT ADDRESS
     }
-    ofile.open("loc.txt",ios::out|ios::trunc);
     ifile.open("Input.txt", ios::in);
+    ofile.open("loc.txt",ios::out|ios::trunc);
     string str;
     int j =0;
     while(!ifile.eof())

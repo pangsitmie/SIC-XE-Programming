@@ -4,7 +4,7 @@ using namespace std;
 void generate_machine_code()
 {
 	string size = decToHex(hexToDec(arr[arr.size()-1].first) - hexToDec(starting_address));
-	//­pºâ¥Øªºµ{¦¡ªºªø«×¥H¦ì¤¸²Õ¬°³æ¦ì¡Asize=³Ì«á¤@­Ó¦ì¸m-²Ä¤@­Ó¦ì¸m+1 
+	//ï¿½pï¿½ï¿½Øªï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¥Hï¿½ì¤¸ï¿½Õ¬ï¿½ï¿½ï¿½ï¿½Asize=ï¿½Ì«ï¿½@ï¿½Ó¦ï¿½m-ï¿½Ä¤@ï¿½Ó¦ï¿½m+1 
 	ofile.open("objectcode.txt",ios::out|ios::trunc);
 	
 	cout << "H " << program_name << "\t" <<"00"<< starting_address <<" "<<"00"<< size << endl;
@@ -14,8 +14,8 @@ void generate_machine_code()
 	while(1)
 	{
 		int flag = 0, length = 0, codes = 0;
-		i = save;//±q²Äi­Ó¶}©l§ä¥i¿é¥Xªº¦ì§} 
-		while(i < arr.size()-1 && object_code[i] != "\t" && codes < 30)//¥Øªº½X³Ì¦h¦³10²Õ¡A¨C¬q¦³3­Óbytes 
+		i = save;//ï¿½qï¿½ï¿½iï¿½Ó¶}ï¿½lï¿½ï¿½iï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½} 
+		while(i < arr.size()-1 && object_code[i] != "\t" && codes < 30)//ï¿½Øªï¿½ï¿½Xï¿½Ì¦hï¿½ï¿½10ï¿½Õ¡Aï¿½Cï¿½qï¿½ï¿½3ï¿½ï¿½bytes 
 		{
 			length++;
 			if(!flag && get_opcode(arr[i].second.second.first) != "-1")
@@ -27,29 +27,29 @@ void generate_machine_code()
 				ofile<<"00"<<arr[i].first << " ";
 				if(!eternal_flag)
 				{
-					firstExecutable = arr[i].first;//³]©w²Ä¤@­Ó³Q°õ¦æªº¦ì§} 
+					firstExecutable = arr[i].first;//ï¿½]ï¿½wï¿½Ä¤@ï¿½Ó³Qï¿½ï¿½ï¿½æªºï¿½ï¿½} 
 					eternal_flag = 1;
 				}
 				
 			}
-			if(object_code[i] != "\t")//object_code[i]¤£µ¥©óRESB,RESW®É 
+			if(object_code[i] != "\t")//object_code[i]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½RESB,RESWï¿½ï¿½ 
 			{
-				codes += (object_code[i].size() / 2);//­pºâ¥Øªº½Xªø«×¡A¤@¬q¥Øªº½X¦³3­Óbytes 
+				codes += (object_code[i].size() / 2);//ï¿½pï¿½ï¿½Øªï¿½ï¿½Xï¿½ï¿½ï¿½×¡Aï¿½@ï¿½qï¿½Øªï¿½ï¿½Xï¿½ï¿½3ï¿½ï¿½bytes 
 				if(codes > 30)
 				{
-					codes -= (object_code[i].size() / 2);//­Y¥Øªº½X¶W¹L10²Õ¸õ¥X°j°é 
+					codes -= (object_code[i].size() / 2);//ï¿½Yï¿½Øªï¿½ï¿½Xï¿½Wï¿½L10ï¿½Õ¸ï¿½ï¿½Xï¿½jï¿½ï¿½ 
 					break;
 				}
 			}
 			i++;
 		}
-		if(!flag)//­Y°_©l¦ì§}§ä¨ì RESB,RESW®É¡A¨Ïsave +1¡AÅý¿é¥X¥i¸õ¹L 
+		if(!flag)//ï¿½Yï¿½_ï¿½lï¿½ï¿½}ï¿½ï¿½ï¿½ RESB,RESWï¿½É¡Aï¿½ï¿½save +1ï¿½Aï¿½ï¿½ï¿½ï¿½Xï¿½iï¿½ï¿½ï¿½L 
 		{
 			save++;
 			continue;
 		}
 		
-		cout<<setw(2)<<setfill('0')<< decToHex(codes) << " ";//¿é¥X¥Øªº½Xªø«× 
+		cout<<setw(2)<<setfill('0')<< decToHex(codes) << " ";//ï¿½ï¿½Xï¿½Øªï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ 
 		ofile<<setw(2)<<setfill('0')<< decToHex(codes) << " ";
 		i = save;
 		codes = 0;

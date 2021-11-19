@@ -3,8 +3,8 @@ using namespace std;
 
 string get_opcode(string op)
 {
-    map <string, string> opcode;
-	opcode.insert(pair <string , string> ("LDA", "00"));
+	map<string, string> opcode;
+	opcode.insert(pair <string,string> ("LDA","00"));
 	opcode.insert(pair <string , string> ("AND", "40"));
 	opcode.insert(pair <string , string> ("DIV", "24"));
 	opcode.insert(pair <string , string> ("SUB", "1C"));
