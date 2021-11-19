@@ -87,9 +87,10 @@ void input()
                     arr[index].second.second.first = temp;
                     found_opcode=1;
                 }
+                temp.clear();
+                flag=0;
             }
-            temp.clear();
-            flag=0;
+            
         }
         program_name= arr[0].second.first;
         starting_address = arr[0].second.second.second;
