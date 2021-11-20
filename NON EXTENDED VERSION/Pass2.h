@@ -4,7 +4,6 @@ using namespace std;
 void generate_machine_code()
 {
 	string size = decToHex(hexToDec(arr[arr.size()-1].first) - hexToDec(starting_address));
-	//�p��ت��{�������ץH�줸�լ����Asize=�̫�@�Ӧ�m-�Ĥ@�Ӧ�m+1 
 	ofile.open("objectcode.txt",ios::out|ios::trunc);
 	
 	cout << "H " << program_name << "\t" <<"00"<< starting_address <<" "<<"00"<< size << endl;
@@ -14,8 +13,8 @@ void generate_machine_code()
 	while(1)
 	{
 		int flag = 0, length = 0, codes = 0;
-		i = save;//�q��i�Ӷ}�l��i��X����} 
-		while(i < arr.size()-1 && object_code[i] != "\t" && codes < 30)//�ت��X�̦h��10�աA�C�q��3��bytes 
+		i = save;
+		while(i < arr.size()-1 && object_code[i] != "\t" && codes < 30)
 		{
 			length++;
 			if(!flag && get_opcode(arr[i].second.second.first) != "-1")
@@ -34,7 +33,7 @@ void generate_machine_code()
 			}
 			if(object_code[i] != "\t")//object_code[i]������RESB,RESW�� 
 			{
-				codes += (object_code[i].size() / 2);//�p��ت��X���סA�@�q�ت��X��3��bytes 
+				codes += (object_code[i].size() / 2);
 				if(codes > 30)
 				{
 					codes -= (object_code[i].size() / 2);//�Y�ت��X�W�L10�ո��X�j�� 
