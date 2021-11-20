@@ -201,19 +201,8 @@ void generate_object_code()
         //if mnemonic == byte
         if(mnemonic == "BYTE")
         {
-            if(operand[0] == 'C')
-            {
-                for(int j=2;j<operand.size()-1;j++)
-                {
-                    int ascii = operand[j];
-                    objectCode += decToHex(ascii);
-                } 
-            }
-            else
-            {
-                for(int j=2;j<operand.size()-1;j++)
-                    objectCode += operand[j];
-            }
+            for(int j=2;j<operand.size()-1;j++)
+                objectCode += operand[j];
             object_code.push_back(objectCode);
             continue;
         }
