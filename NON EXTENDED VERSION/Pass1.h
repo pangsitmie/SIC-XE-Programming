@@ -176,7 +176,7 @@ void addressing()
 
 void generate_object_code()
 {
-    string label_address, mnemonic, operand, objectCode = "" ;
+    string objectCode="", mnemonic, operand, label_address;
     for (int i = 0; i < arr.size(); i++)
     {
         int flag = 0;
@@ -199,39 +199,38 @@ void generate_object_code()
             operand += arr[i].second.second.second[j];
         }
         //if mnemonic == byte
-        if (mnemonic == "BYTE")
+        if(mnemonic == "BYTE")
         {
-            if (operand[0] == 'C')
+            if(operand[0] == 'C')
             {
-                for (int k = 2; k < operand.size() - 1; k++)
+                for(int j=2;j<operand.size()-1;j++)
                 {
-                    int ascii = operand[k];
-                    objectCode += (decToHex(ascii));
-                }
+                    int ascii = operand[j];
+                    objectCode += decToHex(ascii);
+                } 
             }
             else
             {
-                for (int k = 2; k < operand.size() - 1; k++)
-                    objectCode += (operand[k]);
+                for(int j=2;j<operand.size()-1;j++)
+                    objectCode += operand[j];
             }
             object_code.push_back(objectCode);
             continue;
         }
         //if mnemonic == word
-        if (mnemonic == "WORD")
+        if(mnemonic == "WORD")
         {
             objectCode += decToHex(atoi(operand.c_str()));
-            if (objectCode.size() < 6)
+            if(objectCode.size() < 6)//objectCode must be 6 digit if bellow 6 digit add zeroes infront
             {
                 string zero;
-                for (int k = 0; k < 6 - objectCode.size(); k++)
+                for(int j =0; j<6-objectCode.size();j++)//how many zero wants to be add
                     zero += "0";
-                objectCode.insert(0, zero);
+                objectCode.insert(0,zero);//insert 00..00 infront of objectCode
             }
             object_code.push_back(objectCode);
             continue;
         }
-
         objectCode += get_opcode(mnemonic);
 
         if (operand == "\t")
@@ -249,7 +248,6 @@ void generate_object_code()
             else
                 label_address[0] -= 8;
         }
-
         objectCode += label_address;
 
         if (flag)
@@ -258,9 +256,9 @@ void generate_object_code()
         if (objectCode.size() < 6)
         {
             string zero;
-            for (int k = 0; k < 6 - objectCode.size(); k++)
+            for(int j =0; j<6-objectCode.size();j++)//how many zero wants to be add
                 zero += "0";
-            objectCode.insert(0, zero);
+            objectCode.insert(0,zero);//insert 00..00 infront of objectCode
         }
         object_code.push_back(objectCode);
     }
