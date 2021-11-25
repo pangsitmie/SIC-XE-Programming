@@ -97,82 +97,90 @@ void input()
     ifile.close();
 }
 
+
 void addressing()
 {
-    arr[0].first = starting_address;
-    arr[1].first = starting_address;
-
-    if (arr[0].second.first.size() > 0)             //IF FOUND LABEL FOR THE FIRST TIME
-        labels[arr[0].second.first] = arr[0].first; //MARK THAT LABEL WITH THE STARTING ADDRESS
-
-    for (int i = 2; i < arr.size(); i++)
-    {
-        string mnemonic = arr[i - 1].second.second.first;
-        string lastAddress = arr[i - 1].first;
-        if (mnemonic != "BYTE" && mnemonic != "RESB" && mnemonic != "RESW")
-            arr[i].first = add(lastAddress, "3", 0); //add address by 3, dec and hex
-        else
-        {
-            if (mnemonic == "BYTE") //IF MNEMONIC ==  BYTE
-            {
-                int bytes;
-                string label2 = arr[i - 1].second.second.second; //how much do you want to reserve
-                char ch = label2[0];
-                if (ch == 'C')
-                    bytes = label2.size() - 3;
-                else
-                {
-                    if ((label2.size() - 3) % 2 == 0) //even
-                        bytes = (label2.size() - 3) / 2;
-                    else //odd
-                        bytes = ((label2.size() - 3) / 2) + 1;
-                }
-                arr[i].first = add(lastAddress, to_string(bytes), 1);
-            }
-            else if (mnemonic == "RESB") //IF MNEMONIC ==  RESB
-            {
-                int reserve = atoi(arr[i - 1].second.second.second.c_str());
-                string hexaReserve = decToHex(reserve);
-                arr[i].first = add(lastAddress, hexaReserve, 1);
-            }
-            else //IF MNEMONIC == RESERVE WORD
-            {
-                int reserve = 3 * atoi(arr[i - 1].second.second.second.c_str());
-                string hexaReserve = decToHex(reserve);
-                arr[i].first = add(lastAddress, hexaReserve, 1);
-            }
-        }
-        if (arr[i].second.first.size() > 0)             //IF FOUND INSTRUCTIONS
-            labels[arr[i].second.first] = arr[i].first; //MARK THE LABEL WITH THAT CURRENT ADDRESS
-    }
-    ifile.open("Input.txt", ios::in);
-    ofile.open("loc.txt", ios::out | ios::trunc);
-    string str;
-    int j = 0;
-    while (!ifile.eof())
-    {
-        str.clear();
-        getline(ifile, str);
-        if (str[0] != '.') //IF THE CURRENT STRING IS NOT "."
-        {
-            if (arr[j].second.first != "\t")
-            {
-                ofile << arr[j].first << "\t" << arr[j].second.first << "\t" << arr[j].second.second.first << "\t" << arr[j].second.second.second << endl;
-                j++;
-            }
-            else
-            {
-                ofile << arr[j].first << "\t" << arr[j].second.first << arr[j].second.second.first << "\t" << arr[j].second.second.second << endl;
-                j++;
-            }
-        }
-        else // IF CURRENT STRING IS "."
-        {
-            ofile << arr[j].first << "\t" << str << endl;
-        }
-    }
-    ofile.close();
-    ifile.close();
+	arr[0].first = starting_address;
+	arr[1].first = starting_address;
+	if(arr[0].second.first.size() > 0)
+		labels[arr[0].second.first] = arr[0].first;
+	
+	for(int i = 2; i < arr.size(); i++)
+	{
+		string mnemonic = arr[i-1].second.second.first;//�ĤT�q�����e�s�Jmnemonic�U�нX
+		string lastAddress = arr[i-1].first;
+		if(mnemonic != "BYTE" && mnemonic != "RESW" && mnemonic != "RESB")
+		{
+			arr[i].first = add(lastAddress, "3", 0);
+		}
+		else
+		{
+			if(mnemonic == "BYTE")
+			{
+				int bytes;
+				string label2 = arr[i-1].second.second.second;
+				char ch = label2[0];
+				if(ch == 'C')
+				{
+					bytes = (label2.size() - 3);
+				}
+				else
+				{
+					if((label2.size() - 3) % 2 == 0)//������ 
+					{
+						bytes = (label2.size() -3) / 2;
+					}
+					else
+					{
+						bytes = ((label2.size() - 3) / 2) + 1;
+					}
+				}
+				arr[i].first = add(lastAddress, to_string(bytes), 1);
+			}
+			else if(mnemonic == "RESB")
+			{
+				int reserve = atoi(arr[i-1].second.second.second.c_str());
+    			string hexaReserve = decToHex(reserve);
+    			arr[i].first = add(lastAddress, hexaReserve, 1);
+			}
+			else//�Y mnemonic == "RESW"�A�O�d�ҥܼƶq��"�r��"�A�ҥH�����H3 
+			{
+				int reserve = 3 * atoi(arr[i-1].second.second.second.c_str());
+				string hexaReserve = decToHex(reserve);
+				arr[i].first = add(lastAddress, hexaReserve, 1);
+			}
+		}
+		if(arr[i].second.first.size() > 0) 
+			{labels[arr[i].second.first] = arr[i].first;}//�Y�ĤG�q���ԭz�A�h�N�p��n����m�s��label��KEY
+	}
+	ofile.open("loc.txt",ios::out|ios::trunc);
+	ifile.open("Input.txt", ios::in);
+	string ste;
+	int j=0;
+	while(!ifile.eof())
+	{
+		string s;
+		getline(ifile,ste);
+		if(ste[0]!='.')
+		{
+			if(arr[j].second.first!="\t")
+			{
+			ofile<<arr[j].first<<"\t"<<arr[j].second.first<<"\t"<<arr[j].second.second.first<<"\t"<<arr[j].second.second.second<<endl;
+			j++;	
+			}
+			else
+			{
+			ofile<<arr[j].first<<"\t"<<arr[j].second.first<<arr[j].second.second.first<<"\t"<<arr[j].second.second.second<<endl;
+			j++;	
+			}
+		}
+		else
+		{
+			ofile<<arr[j].first<<"\t"<<ste<<endl;
+		}
+	}
+	ofile.close();
+	ifile.close();
 }
 
 void generate_object_code()
@@ -183,7 +191,7 @@ void generate_object_code()
         int flag = 0;
         objectCode.clear();
         mnemonic = arr[i].second.second.first;
-        if (mnemonic == "RESW" || mnemonic == "RESB" || mnemonic == "END" || mnemonic == "START")
+        if (mnemonic == "RESW" || mnemonic == "RESB" || mnemonic == "START" || mnemonic == "END")
         {
             object_code.push_back("\t");
             continue;
@@ -251,7 +259,7 @@ void generate_object_code()
         }
         objectCode += label_address;
 
-        if (flag)
+        if(flag)
             objectCode = add(objectCode, "8000", 1);
 
         if (objectCode.size() < 6)
