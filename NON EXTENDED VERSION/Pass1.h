@@ -43,6 +43,7 @@ string add(string str, string adder, int flag)
     }
 }
 
+
 void input()
 {
     string str, temp;
@@ -73,7 +74,7 @@ void input()
             if (flag)
             {
                 if (get_opcode(temp) == "-1" && (temp != "RESB" && temp != "RESW" && temp != "BYTE" && temp != "WORD" &&
-                                                 temp != "START" && temp != "END"))
+                temp != "START" && temp != "END"))
                 {
                     if (!found_opcode)
                         arr[index].second.first = temp;
@@ -118,7 +119,7 @@ void addressing()
                 string label2 = arr[i - 1].second.second.second; //how much do you want to reserve
                 char ch = label2[0];
                 if (ch == 'C')
-                    bytes = (label2.size() - 3);
+                    bytes = label2.size() - 3;
                 else
                 {
                     if ((label2.size() - 3) % 2 == 0) //even
@@ -176,7 +177,7 @@ void addressing()
 
 void generate_object_code()
 {
-    string objectCode="", mnemonic, operand, label_address;
+    string objectCode, mnemonic, operand, label_address;
     for (int i = 0; i < arr.size(); i++)
     {
         int flag = 0;
@@ -201,8 +202,19 @@ void generate_object_code()
         //if mnemonic == byte
         if(mnemonic == "BYTE")
         {
-            for(int j=2;j<operand.size()-1;j++)
-                objectCode += operand[j];
+            if(operand[0] == 'C')
+            {
+                for(int j=2;j<operand.size()-1;j++)
+                {
+                    int ascii = operand[j];
+                    objectCode += decToHex(ascii);
+                } 
+            }
+            else
+            {
+                for(int j=2;j<operand.size()-1;j++)
+                    objectCode += operand[j];
+            }
             object_code.push_back(objectCode);
             continue;
         }

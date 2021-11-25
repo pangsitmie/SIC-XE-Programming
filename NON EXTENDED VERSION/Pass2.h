@@ -19,36 +19,34 @@ void generate_machine_code()
 			length++;
 			if(!flag && get_opcode(arr[i].second.second.first) != "-1")
 			{
-				cout <<"T ";
-				ofile<<"T ";
 				flag = 1;
-				cout <<"00"<<arr[i].first << " ";
-				ofile<<"00"<<arr[i].first << " ";
+				cout <<"T "<<"00"<<arr[i].first << " ";
+				ofile <<"T "<<"00"<<arr[i].first << " ";
 				if(!eternal_flag)
 				{
-					firstExecutable = arr[i].first;//�]�w�Ĥ@�ӳQ���檺��} 
+					firstExecutable = arr[i].first;
 					eternal_flag = 1;
 				}
 				
 			}
-			if(object_code[i] != "\t")//object_code[i]������RESB,RESW�� 
+			if(object_code[i] != "\t")
 			{
 				codes += (object_code[i].size() / 2);
 				if(codes > 30)
 				{
-					codes -= (object_code[i].size() / 2);//�Y�ت��X�W�L10�ո��X�j�� 
+					codes -= (object_code[i].size() / 2);
 					break;
 				}
 			}
 			i++;
 		}
-		if(!flag)//�Y�_�l��}��� RESB,RESW�ɡA��save +1�A����X�i���L 
+		if(!flag)
 		{
 			save++;
 			continue;
 		}
 		
-		cout<<setw(2)<<setfill('0')<< decToHex(codes) << " ";//��X�ت��X���� 
+		cout<<setw(2)<<setfill('0')<< decToHex(codes) << " ";
 		ofile<<setw(2)<<setfill('0')<< decToHex(codes) << " ";
 		i = save;
 		codes = 0;
@@ -80,5 +78,5 @@ void generate_machine_code()
 	}
 	cout << endl << "E " <<"00"<< firstExecutable << endl;
 	ofile<< endl << "E " <<"00"<< firstExecutable << endl;
-ofile.close();
-}
+	ofile.close();
+}	
